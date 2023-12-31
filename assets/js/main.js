@@ -85,16 +85,39 @@ async function setCardsField(cardId){
 
     let botCardId = await getRandomCardId();
 
-    state.fieldCards.player.style.display = "block";
-    state.fieldCards.bot.style.display = "block";
+    await showHiddenCardFields(true);
 
-    state.fieldCards.player.src = cardData[cardId].img;
-    state.fieldCards.bot.src = cardData[botCardId].img;
+    await hiddenCardDetails();
+
+    await drawCardsInfield(cardId, botCardId);
 
     let duelResult = await checkDuelResult(cardId, botCardId);
     
     await updateScore();
     await drawButton(duelResult);
+}
+
+async function drawCardsInfield(cardId, botCardId){
+    state.fieldCards.player.src = cardData[cardId].img;
+    state.fieldCards.bot.src = cardData[botCardId].img;
+}
+
+async function showHiddenCardFields(value){
+    if(value === true){
+        state.fieldCards.player.style.display = "block";
+        state.fieldCards.bot.style.display = "block";
+    }
+    if(value === false){
+        state.fieldCards.player.style.display = "none";
+        state.fieldCards.bot.style.display = "none";
+    }
+} 
+
+
+async function hiddenCardDetails() {
+    state.cardSprites.avatar.src = "";
+    state.cardSprites.name.innerText = "";
+    state.cardSprites.type.innerText = "";
 }
 
 async function updateScore(){
@@ -107,18 +130,19 @@ async function drawButton(text){
 }
 
 async function checkDuelResult(playerCardId, BotCardId){
-    let duelResult = "Empate";
+    let duelResult = "DRAW";
     let playerCard = cardData[playerCardId];
 
     if(playerCard.winOf.includes(BotCardId)){
-        duelResult = "Ganhou";
+        duelResult = "WIN";
         state.score.playerScore++;
     }
 
     if(playerCard.loseOf.includes(BotCardId)){
-        duelResult = "Perdeu";
+        duelResult = "LOSE";
         state.score.botScore++;
     }
+    await playAudio(duelResult);
 
     return duelResult;
 
@@ -150,9 +174,31 @@ async function drawCards(cardNumbers, fieldSide){
     }
 }
 
+async function resetDuel(){
+    state.cardSprites.avatar.src = "";
+    state.actions.button.style.display = "none";
+
+    state.fieldCards.player.style.display = "none";
+    state.fieldCards.bot.style.display = "none";
+
+    init();
+}
+
+async function playAudio(status){
+    const audio = new Audio(`/projects/yugiyoh/assets/audios/${status}.wav`);
+    try{
+        audio.play();
+    }catch{}
+}
+
 function init(){
+    showHiddenCardFields(false);
     drawCards(5, state.playerSides.player1);
     drawCards(5, state.playerSides.bot);
+
+
+    const bgm = document.getElementById("bgm");
+    bgm.play();
 }
 
 init();
