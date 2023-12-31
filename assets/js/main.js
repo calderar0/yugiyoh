@@ -13,15 +13,18 @@ const state = {
         player: document.getElementById("player-field-card"),
         bot: document.getElementById("bot-field-card"),
     },
+    playerSides: {
+        player1: "player-cards",
+        player1Box: document.querySelector("#player-cards"),
+        bot: "bot-cards",
+        botBox: document.querySelector("#bot-cards"),
+    },    
     actions:{
         button: document.getElementById("next-duel"),
     },
 };
 
-const playerSides = {
-    player1: "player-cards",
-    bot: "bot-cards",
-};
+
 
 
 const cardData = [
@@ -63,7 +66,7 @@ async function createCardImage(idCard, fieldSide){
     cardImage.setAttribute("data-id", idCard);
     cardImage.classList.add("card");
 
-    if(fieldSide === playerSides.player1){
+    if(fieldSide === state.playerSides.player1){
         cardImage.addEventListener("mouseover", ()=>{
             drawSelectedCard(idCard);
         });
@@ -74,7 +77,62 @@ async function createCardImage(idCard, fieldSide){
 
 
     return cardImage;
+}
 
+async function setCardsField(cardId){
+    await removeAllCardsImg();
+
+
+    let botCardId = await getRandomCardId();
+
+    state.fieldCards.player.style.display = "block";
+    state.fieldCards.bot.style.display = "block";
+
+    state.fieldCards.player.src = cardData[cardId].img;
+    state.fieldCards.bot.src = cardData[botCardId].img;
+
+    let duelResult = await checkDuelResult(cardId, botCardId);
+    
+    await updateScore();
+    await drawButton(duelResult);
+}
+
+async function updateScore(){
+    state.score.scoreBox.innerText = `Win: ${state.score.playerScore} | Lose: ${state.score.botScore}`;
+}
+
+async function drawButton(text){
+    state.actions.button.innerText = text;
+    state.actions.button.style.display = "block";
+}
+
+async function checkDuelResult(playerCardId, BotCardId){
+    let duelResult = "Empate";
+    let playerCard = cardData[playerCardId];
+
+    if(playerCard.winOf.includes(BotCardId)){
+        duelResult = "Ganhou";
+        state.score.playerScore++;
+    }
+
+    if(playerCard.loseOf.includes(BotCardId)){
+        duelResult = "Perdeu";
+        state.score.botScore++;
+    }
+
+    return duelResult;
+
+}
+
+async function removeAllCardsImg(){
+    let cards = state.playerSides.botBox;
+    let imageElements = cards.querySelectorAll("img");
+    imageElements.forEach((img)=>img.remove());
+
+
+    cards = state.playerSides.player1Box;
+    imageElements = cards.querySelectorAll("img");
+    imageElements.forEach((img)=>img.remove());
 }
 
 async function drawSelectedCard(index){
@@ -92,14 +150,9 @@ async function drawCards(cardNumbers, fieldSide){
     }
 }
 
-
-
-
-
-
 function init(){
-    drawCards(5, playerSides.player1);
-    drawCards(5, playerSides.bot);
+    drawCards(5, state.playerSides.player1);
+    drawCards(5, state.playerSides.bot);
 }
 
 init();
