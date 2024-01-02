@@ -185,7 +185,7 @@ async function resetDuel(){
 }
 
 async function playAudio(status){
-    const audio = new Audio(`assets/audios/${status}.wav`);
+    const audio = new Audio(`./assets/audios/${status}.wav`);
     try{
         audio.play();
     }catch{}
