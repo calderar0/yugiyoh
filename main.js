@@ -32,7 +32,7 @@ const cardData = [
         id:0,
         name: "Blue Eyes White Dragon",
         type: "Paper",
-        img: "../icons/dragon.png",
+        img: "./assets/icons/dragon.png",
         winOf: [1],
         loseOf:[2],
     },
@@ -40,7 +40,7 @@ const cardData = [
         id:1,
         name: "Dark Magician",
         type: "Rock",
-        img: "../icons/magician.png",
+        img: "./assets/icons/magician.png",
         winOf: [2],
         loseOf:[0],
     },
@@ -48,7 +48,7 @@ const cardData = [
         id:2,
         name: "Exodia",
         type: "Scissors",
-        img: "../icons/exodia.png",
+        img: "./assets/icons/exodia.png",
         winOf: [0],
         loseOf:[1],
     }
@@ -62,7 +62,7 @@ async function getRandomCardId(){
 async function createCardImage(idCard, fieldSide){
     const cardImage = document.createElement("img");
     cardImage.setAttribute("height", "100px");
-    cardImage.setAttribute("src", "/projects/yugiyoh/assets/icons/card-back.png");
+    cardImage.setAttribute("src", "./assets/icons/card-back.png");
     cardImage.setAttribute("data-id", idCard);
     cardImage.classList.add("card");
 
@@ -185,7 +185,7 @@ async function resetDuel(){
 }
 
 async function playAudio(status){
-    const audio = new Audio(`../audios/${status}.wav`);
+    const audio = new Audio(`./assets/audios/${status}.wav`);
     try{
         audio.play();
     }catch{}
