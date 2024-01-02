@@ -32,7 +32,7 @@ const cardData = [
         id:0,
         name: "Blue Eyes White Dragon",
         type: "Paper",
-        img: "/projects/yugiyoh/assets/icons/dragon.png",
+        img: "../icons/dragon.png",
         winOf: [1],
         loseOf:[2],
     },
@@ -40,7 +40,7 @@ const cardData = [
         id:1,
         name: "Dark Magician",
         type: "Rock",
-        img: "/projects/yugiyoh/assets/icons/magician.png",
+        img: "../icons/magician.png",
         winOf: [2],
         loseOf:[0],
     },
@@ -48,7 +48,7 @@ const cardData = [
         id:2,
         name: "Exodia",
         type: "Scissors",
-        img: "/projects/yugiyoh/assets/icons/exodia.png",
+        img: "../icons/exodia.png",
         winOf: [0],
         loseOf:[1],
     }
@@ -185,7 +185,7 @@ async function resetDuel(){
 }
 
 async function playAudio(status){
-    const audio = new Audio(`/projects/yugiyoh/assets/audios/${status}.wav`);
+    const audio = new Audio(`../audios/${status}.wav`);
     try{
         audio.play();
     }catch{}
